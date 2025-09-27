@@ -34,5 +34,5 @@ const upload = multer({
 });
 
 export { cloudinary };
-export const uploadSingle = upload.single('photo');
-export const uploadMultiple = upload.array('photo', 10);
+export const uploadSingle = upload.single('image');
+export const uploadMultiple = upload.array('image', 10);
