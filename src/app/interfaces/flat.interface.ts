@@ -4,7 +4,7 @@ import { Types } from 'mongoose';
 export interface Flat {
   _id: string;
   projectId: Types.ObjectId;
-  slug: string; // new
+
   name: string;
   type: string;
   area: number;

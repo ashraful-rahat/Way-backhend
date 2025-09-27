@@ -1,13 +1,11 @@
 // src/models/project.model.ts
-import mongoose, { Document, Schema } from 'mongoose';
-import slugify from 'slugify';
+import { Document, Schema, model } from 'mongoose';
 import { Project } from '../interfaces/project.interface';
 
 const projectSchema: Schema<Project & Document> = new Schema(
   {
     cityId: { type: Schema.Types.ObjectId, ref: 'City', required: true },
     name: { type: String, required: true },
-    slug: { type: String, unique: true },
     description: { type: String },
     location: { type: String },
     isFeatured: { type: Boolean, default: false },
@@ -18,11 +16,4 @@ const projectSchema: Schema<Project & Document> = new Schema(
   { timestamps: true },
 );
 
-projectSchema.pre('save', function (next) {
-  if (this.isModified('name')) {
-    this.slug = slugify(this.name, { lower: true, strict: true });
-  }
-  next();
-});
-
-export const ProjectModel = mongoose.model<Project & Document>('Project', projectSchema);
+export const ProjectModel = model<Project & Document>('Project', projectSchema);
