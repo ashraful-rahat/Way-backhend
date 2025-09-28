@@ -1,4 +1,5 @@
 import { Types } from 'mongoose';
+
 export interface Flat {
   _id: string;
   projectId: Types.ObjectId;
@@ -8,7 +9,7 @@ export interface Flat {
   rooms: number;
   price: number;
   floor?: number;
-  images?: string[];
+  images?: string[]; // multiple images
   available: boolean;
   createdAt: Date;
   updatedAt: Date;

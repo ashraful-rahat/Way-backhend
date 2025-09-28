@@ -32,25 +32,13 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CityModel = void 0;
 // src/models/city.model.ts
 const mongoose_1 = __importStar(require("mongoose"));
-const slugify_1 = __importDefault(require("slugify"));
 const citySchema = new mongoose_1.Schema({
     name: { type: String, required: true, unique: true },
-    slug: { type: String, unique: true },
     image: { type: String },
     description: { type: String },
 }, { timestamps: true });
-// Pre-save hook to generate slug
-citySchema.pre('save', function (next) {
-    if (this.isModified('name')) {
-        this.slug = (0, slugify_1.default)(this.name, { lower: true, strict: true });
-    }
-    next();
-});
 exports.CityModel = mongoose_1.default.model('City', citySchema);

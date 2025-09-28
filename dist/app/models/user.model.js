@@ -47,8 +47,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserModel = void 0;
 // src/models/user.model.ts
+const bcrypt_1 = __importDefault(require("bcrypt")); // bcryptjs → bcrypt
 const mongoose_1 = __importStar(require("mongoose"));
-const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const userSchema = new mongoose_1.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
@@ -61,8 +61,8 @@ userSchema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!this.isModified('password'))
             return next();
-        const salt = yield bcryptjs_1.default.genSalt(10);
-        this.password = yield bcryptjs_1.default.hash(this.password, salt);
+        const salt = yield bcrypt_1.default.genSalt(10);
+        this.password = yield bcrypt_1.default.hash(this.password, salt);
         next();
     });
 });

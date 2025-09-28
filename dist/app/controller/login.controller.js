@@ -13,25 +13,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loginUser = void 0;
-const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const jwt_1 = require("../../utils/jwt");
 const user_model_1 = require("../models/user.model");
 const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password } = req.body;
-        // 1. Find user
+        console.log('👉 Request body:', req.body);
         const user = yield user_model_1.UserModel.findOne({ email });
+        console.log('👉 User from DB:', user);
         if (!user) {
-            return res.status(400).json({ message: 'Invalid credentials' });
+            return res.status(400).json({ message: 'Invalid credentials (user not found)' });
         }
-        // 2. Compare password
-        const isMatch = yield bcryptjs_1.default.compare(password, user.password);
+        const isMatch = yield bcrypt_1.default.compare(password, user.password);
+        console.log('👉 Compare result:', isMatch);
         if (!isMatch) {
-            return res.status(400).json({ message: 'Invalid credentials' });
+            return res.status(400).json({ message: 'Invalid credentials (password mismatch)' });
         }
-        // 3. Generate token
         const token = (0, jwt_1.generateToken)(user._id.toString(), user.role);
-        // 4. Return response
         res.status(200).json({
             message: 'Login successful',
             user: { id: user._id, name: user.name, email: user.email, role: user.role },

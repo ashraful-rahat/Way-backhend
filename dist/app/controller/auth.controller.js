@@ -13,29 +13,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerUser = void 0;
-const user_model_1 = require("../models/user.model");
-const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const jwt_1 = require("../../utils/jwt");
+const user_model_1 = require("../models/user.model");
 const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name, email, password, role } = req.body;
-        // 1. Check if user exists
         const existingUser = yield user_model_1.UserModel.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: 'User already exists' });
         }
-        // 2. Hash password
-        const hashedPassword = yield bcryptjs_1.default.hash(password, 10);
-        // 3. Create user
+        const hashedPassword = yield bcrypt_1.default.hash(password, 10);
         const user = yield user_model_1.UserModel.create({
             name,
             email,
-            password: hashedPassword,
-            role: role || 'user', // default user
+            password, // raw password, model will hash automatically
+            role: role || 'user',
         });
-        // 4. Generate token
         const token = (0, jwt_1.generateToken)(user._id.toString(), user.role);
-        // 5. Return response
         res.status(201).json({
             message: 'User registered successfully',
             user: { id: user._id, name: user.name, email: user.email, role: user.role },

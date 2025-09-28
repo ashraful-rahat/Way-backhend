@@ -1,32 +1,21 @@
-// routes/project.route.ts
 import express from 'express';
 import { projectController } from '../controller/project.controller';
 import { authenticate } from '../middleware/auth.middleware';
-import { uploadSingle } from '../middleware/multer';
-import { parseJsonData } from '../middleware/parseJsonData';
+import { uploadProjectImages } from '../middleware/multer';
 
 const router = express.Router();
 
-// শুধু অ্যাডমিনদের জন্য সুরক্ষিত route
+// Protected admin routes
 router.post(
   '/create',
   authenticate(['admin']),
-  uploadSingle,
-  parseJsonData,
+  uploadProjectImages,
   projectController.createProject,
 );
-
-router.patch(
-  '/:id',
-  authenticate(['admin']),
-  uploadSingle,
-  parseJsonData,
-  projectController.updateProject,
-);
-
+router.patch('/:id', authenticate(['admin']), uploadProjectImages, projectController.updateProject);
 router.delete('/:id', authenticate(['admin']), projectController.deleteProject);
 
-// public routes
+// Public routes
 router.get('/', projectController.getAllProjects);
 router.get('/:id', projectController.getSingleProject);
 

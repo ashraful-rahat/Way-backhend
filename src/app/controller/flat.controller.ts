@@ -1,12 +1,13 @@
-// controllers/flat.controller.ts
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { FlatService } from '../services/flat.service';
 
 const createFlat = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const fileUrl = (req.file as any)?.path; // single image upload
-    const data = fileUrl ? { ...req.body, images: [fileUrl] } : req.body;
+    // multiple images
+    const images = (req.files as any)?.map((file: any) => file.path);
+
+    const data = images ? { ...req.body, images } : req.body;
 
     const result = await FlatService.createFlat(data);
 
@@ -23,12 +24,7 @@ const createFlat = async (req: Request, res: Response, next: NextFunction) => {
 const getAllFlats = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await FlatService.getAllFlats();
-
-    res.status(httpStatus.OK).json({
-      status: 'success',
-      results: result.length,
-      data: result,
-    });
+    res.status(httpStatus.OK).json({ status: 'success', results: result.length, data: result });
   } catch (error) {
     next(error);
   }
@@ -37,18 +33,9 @@ const getAllFlats = async (req: Request, res: Response, next: NextFunction) => {
 const getSingleFlat = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await FlatService.getFlatById(req.params.id);
-
-    if (!result) {
-      return res.status(httpStatus.NOT_FOUND).json({
-        status: 'fail',
-        message: 'Flat not found',
-      });
-    }
-
-    res.status(httpStatus.OK).json({
-      status: 'success',
-      data: result,
-    });
+    if (!result)
+      return res.status(httpStatus.NOT_FOUND).json({ status: 'fail', message: 'Flat not found' });
+    res.status(httpStatus.OK).json({ status: 'success', data: result });
   } catch (error) {
     next(error);
   }
@@ -56,25 +43,16 @@ const getSingleFlat = async (req: Request, res: Response, next: NextFunction) =>
 
 const updateFlat = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const id = req.params.id;
-    const fileUrl = (req.file as any)?.path;
+    const images = (req.files as any)?.map((file: any) => file.path);
+    const data = images ? { ...req.body, images } : req.body;
 
-    const data = fileUrl ? { ...req.body, images: [fileUrl] } : req.body;
+    const result = await FlatService.updateFlat(req.params.id, data);
+    if (!result)
+      return res.status(httpStatus.NOT_FOUND).json({ status: 'fail', message: 'Flat not found' });
 
-    const result = await FlatService.updateFlat(id, data);
-
-    if (!result) {
-      return res.status(httpStatus.NOT_FOUND).json({
-        status: 'fail',
-        message: 'Flat not found',
-      });
-    }
-
-    res.status(httpStatus.OK).json({
-      status: 'success',
-      message: 'Flat updated successfully',
-      data: result,
-    });
+    res
+      .status(httpStatus.OK)
+      .json({ status: 'success', message: 'Flat updated successfully', data: result });
   } catch (error) {
     next(error);
   }
@@ -83,19 +61,11 @@ const updateFlat = async (req: Request, res: Response, next: NextFunction) => {
 const deleteFlat = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const flat = await FlatService.getFlatById(req.params.id);
-    if (!flat) {
-      return res.status(httpStatus.NOT_FOUND).json({
-        status: 'fail',
-        message: 'Flat not found',
-      });
-    }
+    if (!flat)
+      return res.status(httpStatus.NOT_FOUND).json({ status: 'fail', message: 'Flat not found' });
 
     await FlatService.deleteFlat(req.params.id);
-
-    res.status(httpStatus.OK).json({
-      status: 'success',
-      message: 'Flat deleted successfully',
-    });
+    res.status(httpStatus.OK).json({ status: 'success', message: 'Flat deleted successfully' });
   } catch (error) {
     next(error);
   }

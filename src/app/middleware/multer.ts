@@ -12,27 +12,24 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: 'users',
+    folder: 'uploads',
     allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
-    transformation: [{ width: 500, height: 500, crop: 'limit' }],
-    public_id: (req: Request, file: Express.Multer.File) => `user_${Date.now()}`,
+    transformation: [{ width: 800, height: 800, crop: 'limit' }],
+    public_id: (req: Request, file: Express.Multer.File) => `${file.fieldname}_${Date.now()}`,
   } as any,
 }) as multer.StorageEngine;
 
 const fileFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
-  if (file.mimetype.startsWith('image/')) {
-    cb(null, true);
-  } else {
-    cb(new Error('Only image files are allowed (jpg, jpeg, png, webp)'));
-  }
+  if (file.mimetype.startsWith('image/')) cb(null, true);
+  else cb(new Error('Only image files are allowed'));
 };
 
-const upload = multer({
-  storage,
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
-  fileFilter,
-});
+const upload = multer({ storage, fileFilter, limits: { fileSize: 10 * 1024 * 1024 } }); // 10MB
 
-export { cloudinary };
-export const uploadSingle = upload.single('image');
-export const uploadMultiple = upload.array('image', 10);
+// Single / multiple image middleware for different entities
+export const uploadCityImage = upload.single('image'); // City single image
+export const uploadFlatImages = upload.array('images', 10); // Flat multiple images
+export const uploadProjectImages = upload.fields([
+  { name: 'mainImage', maxCount: 1 },
+  { name: 'galleryImages', maxCount: 10 },
+]);

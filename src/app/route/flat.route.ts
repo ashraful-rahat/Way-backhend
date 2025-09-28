@@ -1,33 +1,16 @@
-// routes/flat.route.ts
 import express from 'express';
-
 import { flatController } from '../controller/flat.controller';
 import { authenticate } from '../middleware/auth.middleware';
-import { uploadSingle } from '../middleware/multer';
-import { parseJsonData } from '../middleware/parseJsonData';
+import { uploadFlatImages } from '../middleware/multer';
 
 const router = express.Router();
 
-// শুধু অ্যাডমিনদের জন্য সুরক্ষিত route
-router.post(
-  '/create',
-  authenticate(['admin']),
-  uploadSingle,
-  parseJsonData,
-  flatController.createFlat,
-);
-
-router.patch(
-  '/:id',
-  authenticate(['admin']),
-  uploadSingle,
-  parseJsonData,
-  flatController.updateFlat,
-);
-
+// Protected admin routes
+router.post('/create', authenticate(['admin']), uploadFlatImages, flatController.createFlat);
+router.patch('/:id', authenticate(['admin']), uploadFlatImages, flatController.updateFlat);
 router.delete('/:id', authenticate(['admin']), flatController.deleteFlat);
 
-// public routes
+// Public routes
 router.get('/', flatController.getAllFlats);
 router.get('/:id', flatController.getSingleFlat);
 

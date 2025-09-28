@@ -1,4 +1,3 @@
-// src/models/flat.model.ts
 import { Document, Schema, model } from 'mongoose';
 import { Flat } from '../interfaces/flat.interface';
 
@@ -11,7 +10,7 @@ const flatSchema: Schema<Flat & Document> = new Schema(
     rooms: { type: Number, required: true },
     price: { type: Number, required: true },
     floor: { type: Number },
-    images: [{ type: String }],
+    images: [{ type: String }], // multiple images
     available: { type: Boolean, default: true },
   },
   { timestamps: true },
