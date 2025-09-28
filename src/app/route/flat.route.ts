@@ -1,6 +1,7 @@
-// routes/project.route.ts
+// routes/flat.route.ts
 import express from 'express';
-import { projectController } from '../controller/project.controller';
+
+import { flatController } from '../controller/flat.controller';
 import { authenticate } from '../middleware/auth.middleware';
 import { uploadSingle } from '../middleware/multer';
 import { parseJsonData } from '../middleware/parseJsonData';
@@ -13,7 +14,7 @@ router.post(
   authenticate(['admin']),
   uploadSingle,
   parseJsonData,
-  projectController.createProject,
+  flatController.createFlat,
 );
 
 router.patch(
@@ -21,13 +22,13 @@ router.patch(
   authenticate(['admin']),
   uploadSingle,
   parseJsonData,
-  projectController.updateProject,
+  flatController.updateFlat,
 );
 
-router.delete('/:id', authenticate(['admin']), projectController.deleteProject);
+router.delete('/:id', authenticate(['admin']), flatController.deleteFlat);
 
 // public routes
-router.get('/', projectController.getAllProjects);
-router.get('/:id', projectController.getSingleProject);
+router.get('/', flatController.getAllFlats);
+router.get('/:id', flatController.getSingleFlat);
 
-export const projectRoutes = router;
+export const flatRoutes = router;
