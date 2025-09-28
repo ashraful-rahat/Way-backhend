@@ -1,6 +1,4 @@
 import { Types } from 'mongoose';
-
-// src/interfaces/flat.interface.ts
 export interface Flat {
   _id: string;
   projectId: Types.ObjectId;

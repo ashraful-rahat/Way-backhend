@@ -4,7 +4,6 @@ export interface Project {
   _id: string;
   cityId: Types.ObjectId;
   name: string;
-
   description?: string;
   location?: string;
   isFeatured: boolean;
