@@ -14,7 +14,7 @@ app.use(express.json());
 //route
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/cities', cityRoutes);
-console.log('✅ Project routes loaded');
+//console.log('✅ Project routes loaded');
 app.use('/api/v1/projects', projectRoutes);
 app.use('/api/v1/flats', flatRoutes);
 

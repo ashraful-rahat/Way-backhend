@@ -24,7 +24,11 @@ const fileFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCallb
   else cb(new Error('Only image files are allowed'));
 };
 
-const upload = multer({ storage, fileFilter, limits: { fileSize: 10 * 1024 * 1024 } }); // 10MB
+const upload = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+});
 
 // Single / multiple image middleware for different entities
 export const uploadCityImage = upload.single('image'); // City single image
