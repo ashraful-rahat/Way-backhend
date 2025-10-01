@@ -1,6 +1,5 @@
 import express from 'express';
 import { cityController } from '../controller/city.controller';
-import { authenticate } from '../middleware/auth.middleware';
 import { uploadCityImage } from '../middleware/multer';
 
 const router = express.Router();
@@ -10,10 +9,13 @@ const router = express.Router();
 
 router.post('/create', uploadCityImage, cityController.createCity);
 
-router.patch('/:id', authenticate(['admin']), uploadCityImage, cityController.updateCity);
+//router.patch('/:id', authenticate(['admin']), uploadCityImage, cityController.updateCity);
 
-router.delete('/:id', authenticate(['admin']), cityController.deleteCity);
+router.patch('/:id', uploadCityImage, cityController.updateCity);
 
+//router.delete('/:id', authenticate(['admin']), cityController.deleteCity);
+
+router.delete('/:id', cityController.deleteCity);
 // Public routes
 router.get('/', cityController.getAllCities);
 router.get('/:id', cityController.getSingleCity);

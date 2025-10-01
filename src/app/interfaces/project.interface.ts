@@ -7,6 +7,7 @@ export interface Project {
   description?: string;
   location?: string;
   isFeatured: boolean;
+  status: 'ongoing' | 'upcoming' | 'completed';
   mainImage?: string;
   galleryImages?: string[];
   amenities?: string[];

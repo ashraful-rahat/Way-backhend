@@ -2,33 +2,22 @@ import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { CityService } from '../services/city.services';
 
-const createCity = async (req: Request, res: Response, next: NextFunction) => {
+export const createCity = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log('➡️ [DEBUG] Hit /cities/create route');
+    const fileUrl = (req.file as any)?.path; // multer-storage-cloudinary URL
 
-    console.log('📦 req.body:', req.body);
-    console.log('📸 req.file:', req.file);
-
-    // 2. Cloudinary file URL
-    const fileUrl = (req.file as any)?.path;
-    console.log('🌐 Cloudinary fileUrl:', fileUrl);
-
-    // 3. Prepare data
+    console.log('[DEBUG] req.file:', req.file);
     const data = fileUrl ? { ...req.body, image: fileUrl } : req.body;
-    console.log('📝 Final city data to save:', data);
+    console.log('[DEBUG] req.body:', req.body);
 
-    // 4. Call service
     const result = await CityService.createCity(data);
-    console.log('✅ DB save result:', result);
 
-    // 5. Send response
     res.status(httpStatus.CREATED).json({
       status: 'success',
       message: 'City created successfully',
       data: result,
     });
-  } catch (error: any) {
-    console.error('❌ [DEBUG] createCity error:', error);
+  } catch (error) {
     next(error);
   }
 };

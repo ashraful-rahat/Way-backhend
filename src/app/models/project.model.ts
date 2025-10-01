@@ -1,4 +1,3 @@
-// src/models/project.model.ts
 import { Document, Schema, model } from 'mongoose';
 import { Project } from '../interfaces/project.interface';
 
@@ -9,6 +8,7 @@ const projectSchema: Schema<Project & Document> = new Schema(
     description: { type: String },
     location: { type: String },
     isFeatured: { type: Boolean, default: false },
+    status: { type: String, enum: ['ongoing', 'upcoming', 'completed'], required: true },
     mainImage: { type: String },
     galleryImages: [{ type: String }],
     amenities: [{ type: String }],

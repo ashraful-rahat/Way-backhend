@@ -1,10 +1,10 @@
 import { City } from '../interfaces/city.interface';
 import { CityModel } from '../models/city.model';
 
-const createCity = async (data: City) => {
+//create new city
+const createCity = async (data: Partial<City>) => {
   return await CityModel.create(data);
 };
-
 const getAllCities = async () => {
   const result = await CityModel.find();
   // latest first
