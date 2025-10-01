@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
-import { FlatService } from '../services/flat.service';
+import { FlatService } from '../services/flat.services';
 
 const createFlat = async (req: Request, res: Response, next: NextFunction) => {
   try {

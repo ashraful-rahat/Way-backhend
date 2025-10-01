@@ -1,17 +1,46 @@
 // controllers/project.controller.ts
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
+import { ProjectInput } from '../interfaces/project.interface';
 import { ProjectService } from '../services/project.services';
 
 const createProject = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const fileUrl = (req.file as any)?.path; // multer-storage-cloudinary URL
+    let mainImage = '';
+    if (req.files && (req.files as any).mainImage) {
+      mainImage = (req.files as any).mainImage[0].path;
+    }
 
-    const data = fileUrl ? { ...req.body, mainImage: fileUrl } : req.body;
+    let galleryImages: string[] = [];
+    if (req.files && (req.files as any).galleryImages) {
+      galleryImages = (req.files as any).galleryImages.map((f: any) => f.path);
+    }
+
+    let amenities: string[] = [];
+    if (req.body.amenities) {
+      try {
+        amenities = JSON.parse(req.body.amenities);
+      } catch {
+        amenities = req.body.amenities.split(',').map((a: string) => a.trim());
+      }
+    }
+
+    // 👇 Use ProjectInput type
+    const data: ProjectInput = {
+      name: req.body.name,
+      description: req.body.description,
+      location: req.body.location,
+      cityId: req.body.cityId,
+      status: req.body.status,
+      isFeatured: req.body.isFeatured === 'true',
+      mainImage,
+      galleryImages,
+      amenities,
+    };
 
     const result = await ProjectService.createProject(data);
 
-    res.status(httpStatus.CREATED).json({
+    res.status(201).json({
       status: 'success',
       message: 'Project created successfully',
       data: result,

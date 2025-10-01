@@ -14,3 +14,6 @@ export interface Project {
   createdAt: Date;
   updatedAt: Date;
 }
+
+// ✅ Create input type (no _id, createdAt, updatedAt)
+export type ProjectInput = Omit<Project, '_id' | 'createdAt' | 'updatedAt'>;
