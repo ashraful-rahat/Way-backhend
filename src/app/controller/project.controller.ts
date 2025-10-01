@@ -16,16 +16,19 @@ const createProject = async (req: Request, res: Response, next: NextFunction) =>
       galleryImages = (req.files as any).galleryImages.map((f: any) => f.path);
     }
 
+    // ------------------ Amenities Fix ------------------
     let amenities: string[] = [];
     if (req.body.amenities) {
-      try {
-        amenities = JSON.parse(req.body.amenities);
-      } catch {
-        amenities = req.body.amenities.split(',').map((a: string) => a.trim());
+      if (typeof req.body.amenities === 'string') {
+        amenities = req.body.amenities
+          .split(',')
+          .map((a: string) => a.trim())
+          .filter((a: any) => a);
+      } else if (Array.isArray(req.body.amenities)) {
+        amenities = req.body.amenities.map((a: string) => a.trim()).filter((a: any) => a);
       }
     }
 
-    // 👇 Use ProjectInput type
     const data: ProjectInput = {
       name: req.body.name,
       description: req.body.description,
@@ -46,6 +49,7 @@ const createProject = async (req: Request, res: Response, next: NextFunction) =>
       data: result,
     });
   } catch (error) {
+    console.error('[DEBUG] Create Project Error:', error);
     next(error);
   }
 };
@@ -87,25 +91,55 @@ const getSingleProject = async (req: Request, res: Response, next: NextFunction)
 const updateProject = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = req.params.id;
-    const fileUrl = (req.file as any)?.path;
 
-    const data = fileUrl ? { ...req.body, mainImage: fileUrl } : req.body;
+    // ------------------ Handle mainImage ------------------
+    const mainImage = (req.files as any)?.mainImage
+      ? (req.files as any).mainImage[0].path
+      : undefined;
+
+    // ------------------ Handle galleryImages ------------------
+    let galleryImages: string[] | undefined = undefined;
+    if ((req.files as any)?.galleryImages) {
+      galleryImages = (req.files as any).galleryImages.map((f: any) => f.path);
+    }
+
+    // ------------------ Handle amenities ------------------
+    let amenities: string[] | undefined = undefined;
+    if (req.body.amenities) {
+      if (typeof req.body.amenities === 'string') {
+        amenities = req.body.amenities
+          .split(',')
+          .map((a: string) => a.trim())
+          .filter((a: any) => a);
+      } else if (Array.isArray(req.body.amenities)) {
+        amenities = req.body.amenities.map((a: string) => a.trim()).filter((a: any) => a);
+      }
+    }
+
+    // ------------------ Prepare data object ------------------
+    const data: Partial<ProjectInput> = {
+      ...req.body,
+      ...(mainImage && { mainImage }),
+      ...(galleryImages && { galleryImages }),
+      ...(amenities && { amenities }),
+    };
 
     const result = await ProjectService.updateProject(id, data);
 
     if (!result) {
-      return res.status(httpStatus.NOT_FOUND).json({
+      return res.status(404).json({
         status: 'fail',
         message: 'Project not found',
       });
     }
 
-    res.status(httpStatus.OK).json({
+    res.status(200).json({
       status: 'success',
       message: 'Project updated successfully',
       data: result,
     });
   } catch (error) {
+    console.error('[DEBUG] Update Project Error:', error);
     next(error);
   }
 };
