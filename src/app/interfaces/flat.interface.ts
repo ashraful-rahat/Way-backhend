@@ -5,8 +5,8 @@ export interface Flat {
   _id: string;
   projectId: Types.ObjectId;
   name: string;
-  type: 'apartment'; // fixed type
-  area: number; // in sq.ft
+  type: 'apartment';
+  area: number;
   rooms: number;
   price: number;
   floor?: number;
@@ -14,4 +14,5 @@ export interface Flat {
   available: boolean;
   createdAt: Date;
   updatedAt: Date;
+  description?: string;
 }

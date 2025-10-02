@@ -44,15 +44,24 @@ const getSingleFlat = async (req: Request, res: Response, next: NextFunction) =>
 const updateFlat = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const images = (req.files as any)?.map((file: any) => file.path);
-    const data = images ? { ...req.body, images } : req.body;
+    const { description, ...rest } = req.body;
+
+    const data = {
+      ...rest,
+      description: description || '',
+    };
+    if (images) data.images = images;
 
     const result = await FlatService.updateFlat(req.params.id, data);
+
     if (!result)
       return res.status(httpStatus.NOT_FOUND).json({ status: 'fail', message: 'Flat not found' });
 
-    res
-      .status(httpStatus.OK)
-      .json({ status: 'success', message: 'Flat updated successfully', data: result });
+    res.status(httpStatus.OK).json({
+      status: 'success',
+      message: 'Flat updated successfully',
+      data: result,
+    });
   } catch (error) {
     next(error);
   }

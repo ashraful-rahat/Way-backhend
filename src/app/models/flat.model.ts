@@ -12,6 +12,9 @@ const flatSchema: Schema<Flat & Document> = new Schema(
     floor: { type: Number },
     images: [{ type: String }], // multiple images
     available: { type: Boolean, default: true },
+
+    // নতুন field
+    description: { type: String }, // rich text content (HTML) save হবে এখানে
   },
   { timestamps: true },
 );
