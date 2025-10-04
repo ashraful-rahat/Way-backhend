@@ -1,10 +1,10 @@
-// src/interfaces/search.interface.ts
-export interface FlatSearchFilters {
-  citySlug?: string; // City.slug
-  projectSlug?: string; // Project.slug
-  location?: string; // Project.location
-  projectType?: 'Office' | 'Residential'; // Flat.type
-  rooms?: number; // Flat.rooms
-  available?: boolean; // Flat.available
-  isFeatured?: boolean; // Project.isFeatured
+export interface SearchFilters {
+  projectId?: string; // Project._id
+  location?: string; // optional, if you want
+  type?: 'house' | 'villa' | 'office' | 'penthouse' | 'apartment';
+  rooms?: number;
+  available?: boolean;
+  minPrice?: number;
+  maxPrice?: number;
+  isFeatured?: boolean;
 }

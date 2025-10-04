@@ -5,6 +5,7 @@ import { cityRoutes } from './route/city.route';
 import { employeeRoutes } from './route/employee.routes';
 import { flatRoutes } from './route/flat.route';
 import { projectRoutes } from './route/project.route';
+import { propertyRoutes } from './route/property.routes';
 
 const app: Application = express();
 
@@ -19,7 +20,7 @@ app.use('/api/v1/cities', cityRoutes);
 app.use('/api/v1/projects', projectRoutes);
 app.use('/api/v1/flats', flatRoutes);
 app.use('/api/v1/employees', employeeRoutes);
-
+app.use('/api/v1/properties', propertyRoutes);
 app.get('/', (req, res) => {
   res.status(200).json({
     status: 'success',

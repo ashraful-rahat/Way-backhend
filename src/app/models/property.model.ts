@@ -14,9 +14,11 @@ const propertySchema: Schema<Property & Document> = new Schema(
     rooms: { type: Number },
     price: { type: Number, required: true },
     floor: { type: Number },
-    images: [{ type: String }],
-    available: { type: Boolean, default: true },
 
+    // 👇 Multer er "images" field er sathe match kore
+    images: [{ type: String }],
+
+    available: { type: Boolean, default: true },
     description: { type: String },
   },
   { timestamps: true },
