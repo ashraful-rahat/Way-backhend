@@ -1,10 +1,7 @@
-export interface SearchFilters {
-  projectId?: string; // Project._id
-  location?: string; // optional, if you want
-  type?: 'house' | 'villa' | 'office' | 'penthouse' | 'apartment';
-  rooms?: number;
-  available?: boolean;
-  minPrice?: number;
-  maxPrice?: number;
-  isFeatured?: boolean;
+export interface BannerSearchFilters {
+  location?: string; // user je location type korbe
+  type?: 'house' | 'villa' | 'office' | 'penthouse' | 'apartment'; // property type
+  rooms?: number; // number of bedrooms
+  minPrice?: number; // optional min price
+  maxPrice?: number; // optional max price
 }
